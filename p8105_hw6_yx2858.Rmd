@@ -1,0 +1,11 @@
+---
+title: "p8105_hw6_yx2858"
+author: "Yueyi Xu"
+date: "2023-11-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
