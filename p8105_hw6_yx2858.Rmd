@@ -80,6 +80,39 @@ boot_strap_df =
   )
 ```
 
+### identify the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r^2
+
+```{r}
+r_s = boot_strap_df |>
+  select(r.squared) |>
+  summarize(
+    ci_low = quantile(r.squared, 0.025),
+    ci_upp = quantile(r.squared, 0.975)
+  )
+```
+
+print in table:
+
+```{r}
+r_s |>
+  knitr::kable()
+```
+
+### Plot the distribution of r^2 estimate
+
+```{r}
+boot_strap_df |>
+  select(r.squared) |>
+  ggplot(aes(x = r.squared)) +
+  geom_density() +
+  labs(
+    title = "Distribution of r-squared estimates",
+    x = "r-squared estimates",
+    y = "Density",
+    subtitle = "5000 bootstrap samples"
+  )
+```
+
 
 
 
