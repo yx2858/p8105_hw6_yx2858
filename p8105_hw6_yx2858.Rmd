@@ -80,10 +80,11 @@ boot_strap_df =
   )
 ```
 
-### identify the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r^2
+### Identify the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r^2
 
 ```{r}
-r_s = boot_strap_df |>
+r_s = 
+  boot_strap_df |>
   select(r.squared) |>
   summarize(
     ci_low = quantile(r.squared, 0.025),
@@ -113,6 +114,55 @@ boot_strap_df |>
   )
 ```
 
+Comment:
+The distribution of the r-squared plot is approximately normal and slightly skewed to the left with a peak around and slightly higher to 0.92, indicating the majority of the bootstrap samples are about the value of 0.92 or close to this value.
+
+### Identify the 2.5% and 97.5% quantiles to provide a 95% confidence interval for $log(\widehat{\beta_1}*\widehat{\beta_2})$
+
+```{r}
+logbeta = 
+  boot_strap_df |>
+  mutate(log = log(beta_1 * beta_2)) |>
+  drop_na()
+
+log_beta1_beta2 =
+  logbeta |>
+  select(log) |>
+  summarize(
+    ci_low = quantile(log, 0.025),
+    ci_high = quantile(log, 0.975)
+  )
+```
+
+print in table:
+
+```{r}
+log_beta1_beta2 |>
+  knitr::kable()
+```
+
+### Plot the distribution of $log(\widehat{\beta_1}*\widehat{\beta_2})$ estimate
+
+```{r}
+logbeta |>
+  select(log) |>
+  ggplot(aes(x = log)) +
+  geom_density() +
+  labs(
+    title = "Distribution of log(B1+B2) estimates",
+    x = "log(B1+B2) estimates",
+    y = "density",
+    subtitle = "5000 bootstrap samples"
+  )
+```
+
+Comment:
+The distribution of the log(B1+B2) plot is skewed to left with a peak around -5.5, indicating the majority of the bootstrap samples are about the values of -5.5 or close to this value.
+
+
+
+
+  
 
 
 
