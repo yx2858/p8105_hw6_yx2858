@@ -160,7 +160,67 @@ Comment:
 The distribution of the log(B1+B2) plot is skewed to left with a peak around -5.5, indicating the majority of the bootstrap samples are about the values of -5.5 or close to this value.
 
 
+# Problem 3
 
+### Import data
+
+```{r}
+birthwt_df = 
+  read_csv("birthweight.csv")
+```
+
+### Clean, tidy the data
+
+```{r}
+birthwt_clean_df =
+  birthwt_df |>
+  mutate(
+    babysex = as.factor(babysex),
+    frace = as.factor(frace),
+    malform = as.factor(malform),
+    mrace = as.factor(mrace)
+  ) |>
+  janitor::clean_names() |>
+  select(bwt, everything())
+```
+
+### Check for missing value
+
+```{r}
+sum(is.na(birthwt_clean_df))
+```
+
+There is no missing value in the tidified dataset.
+
+### Propose a regression model for birthweight
+
+```{r}
+birthwt_mlr = lm(bwt ~., data = birthwt_clean_df)
+
+birthwt_mlr |>
+  broom::tidy() |>
+  knitr::kable()
+```
+
+The above MLR is a regression model for birthweight. Each variable in the dataset is considered as a predictor of the regression model for birthweight.
+
+### Plot of model residuals against fitted values
+
+```{r}
+birthwt_clean_df |>
+  add_predictions(birthwt_mlr) |>
+  add_residuals(birthwt_mlr) |>
+  ggplot(aes(x = pred, y = resid)) +
+  geom_smooth(method = "lm") +
+  geom_point() +
+  labs(
+    title = "Residuals against Fitted Values",
+    x = "Fitted Values",
+    y = "Residuals"
+  )
+```
+
+From the plot of the residuals against fitted value, the slop is 0, indicating there is no linear association between residuals against fitted values.
 
   
 
